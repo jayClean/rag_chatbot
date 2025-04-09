@@ -7,12 +7,21 @@ from embedder import embed_text
 from retriever import search_index
 from vector_store import is_index_empty, get_vector_count
 import logging
-
+from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# Allow frontend (localhost:5173) to talk to backend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # or ["*"] for all origins (not recommended for prod)
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class WebsiteIngest(BaseModel):
     url: str
